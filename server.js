@@ -15,12 +15,15 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // Session configuration
+// Session configuration
 app.use(session({
     secret: process.env.SESSION_SECRET || 'jobi_events_secret_key_2024',
-    resave: false,
-    saveUninitialized: false,
+    resave: true,
+    saveUninitialized: true,
     cookie: { 
-        secure: process.env.NODE_ENV === 'production', // true on Railway
+        secure: false,  // ← CHANGE TO false (Railway uses HTTP internally)
+        httpOnly: true,
+        sameSite: 'lax',
         maxAge: 24 * 60 * 60 * 1000
     }
 }));
