@@ -13,7 +13,41 @@ const PORT = 3001;
 // Middleware
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-
+// ============== CORS FIX (Add this entire block) ==============
+app.use((req, res, next) => {
+    // Allow both your Railway URLs and localhost
+    const allowedOrigins = [
+        'https://jabyevents.up.railway.app',
+        'https://jabevents.up.railway.app',
+        'http://localhost:3000',
+        'http://localhost:3001',
+        'https://jabyevents.railway.app'
+    ];
+    
+    const origin = req.headers.origin;
+    if (allowedOrigins.includes(origin)) {
+        res.header('Access-Control-Allow-Origin', origin);
+    } else {
+        // For testing - allow all (remove in production if needed)
+        res.header('Access-Control-Allow-Origin', '*');
+    }
+    
+    // Allow credentials (cookies, authorization headers)
+    res.header('Access-Control-Allow-Credentials', 'true');
+    
+    // Allow specific methods
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+    
+    // Allow specific headers
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization, Cookie');
+    
+    // Handle preflight requests (important for CORS)
+    if (req.method === 'OPTIONS') {
+        return res.status(200).end();
+    }
+    
+    next();
+});
 // Session configuration
 // Session configuration
 app.use(session({
