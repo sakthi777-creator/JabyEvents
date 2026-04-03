@@ -8,29 +8,31 @@ const fs = require('fs');
 
 const app = express();
 const PORT = 3001;
-
+// Load environment variables
+require('dotenv').config();
 // Middleware
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // Session configuration
 app.use(session({
-    secret: 'jobi_events_secret_key_2024',
+    secret: process.env.SESSION_SECRET || 'jobi_events_secret_key_2024',
     resave: false,
     saveUninitialized: false,
     cookie: { 
-        secure: false,
+        secure: process.env.NODE_ENV === 'production', // true on Railway
         maxAge: 24 * 60 * 60 * 1000
     }
 }));
 
 // Database connection - UPDATE THIS WITH YOUR PASSWORD
+// Database connection - USING ENVIRONMENT VARIABLES
 const db = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: 'root123',  // ← CHANGE THIS TO YOUR MYSQL PASSWORD
-    database: 'jobi_events',
-    port: 3306
+    host: process.env.DB_HOST || 'localhost',
+    user: process.env.DB_USER || 'root',
+    password: process.env.DB_PASSWORD || 'root123',
+    database: process.env.DB_NAME || 'jobi_events',
+    port: process.env.DB_PORT || 3306
 });
 
 // Connect to database
