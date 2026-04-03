@@ -963,6 +963,37 @@ if (false) { // disabled auto-generation — use static admin-dashboard.html
     console.log('✅ Created admin-dashboard.html');
 }
 
+
+// DEBUG ROUTES - Remove after testing
+app.get('/debug/create-admin', (req, res) => {
+    const bcrypt = require('bcryptjs');
+    const username = 'admin';
+    const hashedPassword = bcrypt.hashSync('admin123', 10);
+    
+    // First delete existing admin
+    db.query('DELETE FROM admin WHERE username = ?', [username], (err) => {
+        if (err) console.error('Delete error:', err);
+        
+        // Then insert new admin
+        db.query('INSERT INTO admin (username, password) VALUES (?, ?)', [username, hashedPassword], (err, result) => {
+            if (err) {
+                res.json({ success: false, error: err.message });
+            } else {
+                res.json({ success: true, message: 'Admin created! Try logging in with admin/admin123' });
+            }
+        });
+    });
+});
+
+app.get('/debug/check-admin', (req, res) => {
+    db.query('SELECT id, username FROM admin', (err, users) => {
+        if (err) {
+            res.json({ error: err.message });
+        } else {
+            res.json({ admins: users, count: users.length });
+        }
+    });
+});
 // Start server
 app.listen(PORT, () => {
     console.log(`
