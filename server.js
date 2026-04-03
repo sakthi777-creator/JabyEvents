@@ -524,7 +524,7 @@ app.post('/api/admin/login', (req, res) => {
             req.session.adminId = user.id;
             req.session.adminUsername = user.username;
             console.log('✅ Admin logged in:', username);
-            res.json({ success: true, redirect: 'https://jabyevents.up.railway.app/admin/dashboard' });
+            res.json({ success: true, redirect: 'https://jabevents.up.railway.app/admin/dashboard' });
         } else {
             console.log('❌ Invalid password for:', username);
             res.status(401).json({ error: 'Invalid credentials' });
