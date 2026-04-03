@@ -9,7 +9,7 @@ const fs = require('fs');
 const app = express();
 const PORT = 3001;
 // Load environment variables
-require('dotenv').config();
+// require('dotenv').config();
 // Middleware
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
