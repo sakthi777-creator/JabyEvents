@@ -921,22 +921,27 @@
 <div class="toast-container" id="toastContainer"></div>
 
 <script>
+    const API_BASE = 'https://jabyevents.up.railway.app';
+    
     // ===== STATE =====
     let allBookings = [];
     let allOffers = [];
 
     // ===== AUTH =====
     async function checkAuth() {
-        const res = await fetch('/api/admin/check', { credentials: 'include' });
+        const res = await fetch(`${API_BASE}/api/admin/check`, { credentials: 'include' });
         const data = await res.json();
-        if (!data.loggedIn) { window.location.href = '/admin/login'; return; }
+        if (!data.loggedIn) { 
+            window.location.href = `${API_BASE}/admin/login`; 
+            return; 
+        }
         document.getElementById('adminName').textContent = data.username;
         document.getElementById('adminAvatar').textContent = data.username[0].toUpperCase();
     }
 
     async function logout() {
-        await fetch('/api/admin/logout', { credentials: 'include', method: 'POST' });
-        window.location.href = '/admin/login';
+        await fetch(`${API_BASE}/api/admin/logout`, { credentials: 'include', method: 'POST' });
+        window.location.href = `${API_BASE}/admin/login`;
     }
 
     // ===== TABS =====
@@ -987,7 +992,7 @@
     // ===== STATS =====
     async function loadStats() {
         try {
-            const res = await fetch('/api/admin/stats', { credentials: 'include' });
+            const res = await fetch(`${API_BASE}/api/admin/stats`, { credentials: 'include' });
             const data = await res.json();
             document.getElementById('st-total').textContent = data.totalBookings?.count ?? 0;
             document.getElementById('st-pending').textContent = data.pendingBookings?.count ?? 0;
@@ -1006,7 +1011,7 @@
     // ===== BOOKINGS =====
     async function loadBookings() {
         try {
-            const res = await fetch('/api/admin/bookings', { credentials: 'include' });
+            const res = await fetch(`${API_BASE}/api/admin/bookings`, { credentials: 'include' });
             allBookings = await res.json();
             renderBookings(allBookings);
             renderRecentBookings(allBookings.slice(0, 5));
@@ -1072,7 +1077,8 @@
     }
 
     async function updateBooking(id, status) {
-        const res = await fetch('/api/admin/bookings/' + id, { credentials: 'include',
+        const res = await fetch(`${API_BASE}/api/admin/bookings/${id}`, { 
+            credentials: 'include',
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ status })
@@ -1084,7 +1090,7 @@
 
     async function deleteBooking(id) {
         if (!confirm('Delete this booking permanently?')) return;
-        const res = await fetch('/api/admin/bookings/' + id, { credentials: 'include', method: 'DELETE' });
+        const res = await fetch(`${API_BASE}/api/admin/bookings/${id}`, { credentials: 'include', method: 'DELETE' });
         const data = await res.json();
         if (data.success) { toast('Booking deleted'); loadBookings(); loadStats(); }
         else toast('Failed to delete', 'error');
@@ -1093,7 +1099,7 @@
     // ===== REVIEWS =====
     async function loadReviews() {
         try {
-            const res = await fetch('/api/admin/reviews', { credentials: 'include' });
+            const res = await fetch(`${API_BASE}/api/admin/reviews`, { credentials: 'include' });
             const reviews = await res.json();
             const tbody = document.getElementById('reviewsTbody');
             if (!reviews.length) {
@@ -1118,7 +1124,7 @@
 
     async function deleteReview(id) {
         if (!confirm('Delete this review?')) return;
-        const res = await fetch('/api/admin/reviews/' + id, { credentials: 'include', method: 'DELETE' });
+        const res = await fetch(`${API_BASE}/api/admin/reviews/${id}`, { credentials: 'include', method: 'DELETE' });
         const data = await res.json();
         if (data.success) { toast('Review deleted'); loadReviews(); loadStats(); }
         else toast('Failed to delete', 'error');
@@ -1127,7 +1133,7 @@
     // ===== INQUIRIES =====
     async function loadInquiries() {
         try {
-            const res = await fetch('/api/admin/inquiries', { credentials: 'include' });
+            const res = await fetch(`${API_BASE}/api/admin/inquiries`, { credentials: 'include' });
             const inquiries = await res.json();
             const tbody = document.getElementById('inquiriesTbody');
             if (!inquiries.length) {
@@ -1151,7 +1157,7 @@
     // ===== OFFERS =====
     async function loadOffers() {
         try {
-            const res = await fetch('/api/admin/offers', { credentials: 'include' });
+            const res = await fetch(`${API_BASE}/api/admin/offers`, { credentials: 'include' });
             allOffers = await res.json();
             const tbody = document.getElementById('offersTbody');
             if (!allOffers.length) {
@@ -1213,7 +1219,7 @@
             is_active: 1
         };
         if (!body.title || !body.description) { toast('Title and description required', 'error'); return; }
-        const url = id ? '/api/admin/offers/' + id : '/api/admin/offers';
+        const url = id ? `${API_BASE}/api/admin/offers/${id}` : `${API_BASE}/api/admin/offers`;
         const method = id ? 'PUT' : 'POST';
         const res = await fetch(url, { credentials: 'include', method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
         const data = await res.json();
@@ -1223,7 +1229,7 @@
 
     async function deleteOffer(id) {
         if (!confirm('Delete this offer?')) return;
-        const res = await fetch('/api/admin/offers/' + id, { credentials: 'include', method: 'DELETE' });
+        const res = await fetch(`${API_BASE}/api/admin/offers/${id}`, { credentials: 'include', method: 'DELETE' });
         const data = await res.json();
         if (data.success) { toast('Offer deleted'); loadOffers(); }
         else toast('Failed to delete', 'error');
@@ -1234,7 +1240,7 @@
 
     async function loadPrices() {
         try {
-            const res = await fetch('/api/admin/prices', { credentials: 'include' });
+            const res = await fetch(`${API_BASE}/api/admin/prices`, { credentials: 'include' });
             allPrices = await res.json();
             const grid = document.getElementById('pricesGrid');
             if (!allPrices.length) {
@@ -1271,7 +1277,8 @@
             description: document.getElementById('priceDesc').value
         };
         if (!body.base_price) { toast('Price is required', 'error'); return; }
-        const res = await fetch('/api/admin/prices/' + id, { credentials: 'include',
+        const res = await fetch(`${API_BASE}/api/admin/prices/${id}`, { 
+            credentials: 'include',
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(body)
