@@ -1,0 +1,1817 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jab Events | Premium Event Management</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --gold-primary: #D4AF37;
+            --gold-light: #F4E4BC;
+            --gold-dark: #AA8C2C;
+            --white-primary: #ffffff;
+            --white-secondary: #fafafa;
+            --white-tertiary: #f5f5f5;
+            --text-dark: #1a1a1a;
+            --text-gray: #666666;
+            --text-light: #999999;
+            --border-light: #e0e0e0;
+            --transition-smooth: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--white-primary);
+            color: var(--text-dark);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'Playfair Display', serif;
+            font-weight: 600;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--white-secondary);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--gold-primary);
+            border-radius: 4px;
+        }
+
+        /* Navigation */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            padding: 20px 5%;
+            transition: var(--transition-smooth);
+            background: transparent;
+        }
+
+        .navbar.scrolled {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 15px 5%;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.05);
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--gold-primary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            letter-spacing: 2px;
+        }
+
+        .logo span {
+            color: var(--text-dark);
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 40px;
+        }
+
+        .nav-links a {
+            color: var(--text-dark);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            letter-spacing: 1px;
+            position: relative;
+            padding: 5px 0;
+            transition: var(--transition-smooth);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--gold-primary);
+            transition: var(--transition-smooth);
+        }
+
+        .nav-links a:hover {
+            color: var(--gold-primary);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .mobile-menu {
+            display: none;
+            font-size: 1.5rem;
+            color: var(--gold-primary);
+            cursor: pointer;
+        }
+
+        /* Locations Section - Now First/Home */
+        .locations-section {
+            padding: 120px 5% 100px;
+            background: var(--white-secondary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .section-header h2 {
+            font-size: clamp(2rem, 5vw, 3rem);
+            color: var(--text-dark);
+            margin-bottom: 15px;
+            position: relative;
+            display: inline-block;
+        }
+
+        .section-header h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 3px;
+            background: var(--gold-primary);
+        }
+
+        .section-header p {
+            color: var(--text-gray);
+            font-size: 1.1rem;
+            margin-top: 20px;
+        }
+
+        .locations-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .location-card {
+            position: relative;
+            height: 400px;
+            border-radius: 15px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            border: 1px solid var(--border-light);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+
+        .location-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--gold-primary);
+            box-shadow: 0 20px 40px rgba(212, 175, 55, 0.15);
+        }
+
+        .location-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: var(--transition-smooth);
+        }
+
+        .location-card:hover img {
+            transform: scale(1.1);
+        }
+
+        .location-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 50%;
+            background: none;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 30px;
+        }
+
+        .location-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            color: var(--text-dark);
+            margin-bottom: 5px;
+        }
+
+        .location-desc {
+            color: var(--text-gray);
+            font-size: 0.9rem;
+        }
+
+        /* Brand Intro Section with Video Background */
+        .brand-intro {
+            position: relative;
+            padding: 150px 5%;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .brand-video-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -2;
+        }
+
+        .brand-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.85);
+            z-index: -1;
+        }
+
+        .brand-content {
+            text-align: center;
+            max-width: 800px;
+            z-index: 1;
+        }
+
+        /* Logo Placeholder Space */
+        .logo-placeholder{
+        width:150px;
+        height:150px;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        margin:auto;
+        overflow:none/* IMPORTANT */
+        }
+
+        .logo-placeholder img{
+         width:140%;
+         height:140;
+         object-fit:contain;
+        }
+
+        .logo-placeholder-text {
+            margin-top: 10px;
+            color: var(--text-gray);
+            font-size: 0.9rem;
+        }
+
+        .brand-logo-large {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(3rem, 6vw, 5rem);
+            color: var(--gold-primary);
+            margin-bottom: 60px;
+            letter-spacing: 5px;
+        }
+
+        .brand-tagline {
+            font-size: 1.5rem;
+            color: var(--text-dark);
+            margin-bottom: 30px;
+            font-weight: 300;
+            font-style: italic;
+        }
+
+        .brand-description {
+            max-width: 700px;
+            margin: 0 auto 40px;
+            color: var(--text-gray);
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+
+        .btn-primary {
+            display: inline-block;
+            padding: 15px 40px;
+            background: var(--gold-primary);
+            color: var(--white-primary);
+            text-decoration: none;
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            transition: var(--transition-smooth);
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+            cursor: pointer;
+            border: 2px solid var(--gold-primary);
+        }
+
+        .btn-primary:hover {
+            background: transparent;
+            color: var(--gold-primary);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.3);
+        }
+
+        /* About Section */
+        .about-section {
+            padding: 100px 5%;
+            background: var(--white-secondary);
+        }
+
+        .about-content {
+            max-width: 1000px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .about-text {
+            font-size: 1.2rem;
+            color: var(--text-gray);
+            line-height: 2;
+            margin-bottom: 30px;
+        }
+
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+            margin-top: 60px;
+            padding-top: 60px;
+            border-top: 1px solid var(--border-light);
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            color: var(--gold-primary);
+            font-weight: 700;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            color: var(--text-gray);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        /* Founder's Desk Section */
+         .founder-section {
+            padding: 100px 5%;
+            background: var(--white-primary);
+            position: relative;
+        }
+
+        .founder-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 60px;
+            align-items: center;
+        }
+
+        .founder-image {
+            position: relative;
+        }
+
+        .founder-image img {
+            width: 100%;
+            max-width: 400px;
+            border-radius: 15px;
+            border: 3px solid var(--gold-primary);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+        }
+
+        .founder-image::before {
+            content: '';
+            position: absolute;
+            top: -20px;
+            left: -20px;
+            width: 100%;
+            height: 100%;
+            border: 2px solid var(--gold-primary);
+            border-radius: 15px;
+            z-index: -1;
+            opacity: 0.3;
+        }
+
+        .founder-content h3 {
+            font-size: 2rem;
+            color: var(--gold-primary);
+            margin-bottom: 10px;
+        }
+
+        .founder-title {
+            color: var(--text-gray);
+            font-size: 1rem;
+            margin-bottom: 30px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+        }
+
+        .founder-message {
+            color: var(--text-gray);
+            font-size: 1.1rem;
+            line-height: 1.9;
+            font-style: normal;
+            position: relative;
+            padding-left: 30px;
+            border-left: 3px solid var(--gold-primary);
+        }
+
+        .founder-signature {
+            margin-top: 30px;
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            color: var(--gold-primary);
+        }
+
+        /* Events Section */
+        .events-section {
+            padding: 100px 5%;
+            background: var(--white-secondary);
+        }
+
+        .events-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 30px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .event-card {
+            background: var(--white-primary);
+            border-radius: 15px;
+            overflow: hidden;
+            border: 1px solid var(--border-light);
+            transition: var(--transition-smooth);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+
+        .event-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            border-color: var(--gold-primary);
+        }
+
+        .event-media {
+            position: relative;
+            height: 250px;
+            overflow: hidden;
+        }
+
+        .event-media img, .event-media video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: var(--transition-smooth);
+        }
+
+        .event-card:hover .event-media img,
+        .event-card:hover .event-media video {
+            transform: scale(1.1);
+        }
+
+        .event-badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: var(--gold-primary);
+            color: var(--white-primary);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .event-info {
+            padding: 30px;
+        }
+
+        .event-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.4rem;
+            color: var(--text-dark);
+            margin-bottom: 10px;
+        }
+
+        .event-desc {
+            color: var(--text-gray);
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        /* Gallery Section */
+        .gallery-section {
+            padding: 100px 5%;
+            background: var(--white-primary);
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .gallery-item {
+            position: relative;
+            height: 300px;
+            border-radius: 10px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            border: 1px solid var(--border-light);
+        }
+
+        .gallery-item:hover {
+            transform: scale(1.02);
+            z-index: 10;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: var(--transition-smooth);
+        }
+
+        .gallery-item:hover img {
+            filter: brightness(0.9);
+        }
+
+        .gallery-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(212, 175, 55, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: var(--transition-smooth);
+        }
+
+        .gallery-item:hover .gallery-overlay {
+            opacity: 1;
+        }
+
+        .gallery-overlay i {
+            font-size: 2rem;
+            color: var(--white-primary);
+        }
+
+        /* Lightbox */
+        .lightbox {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255,255,255,0.98);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .lightbox.active {
+            display: flex;
+        }
+
+        .lightbox-img {
+            max-width: 90%;
+            max-height: 90%;
+            border-radius: 10px;
+            border: 3px solid var(--gold-primary);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: 30px;
+            right: 30px;
+            font-size: 2rem;
+            color: var(--gold-primary);
+            cursor: pointer;
+            transition: var(--transition-smooth);
+        }
+
+        .lightbox-close:hover {
+            transform: rotate(90deg);
+        }
+
+        /* Reviews Section */
+        .reviews-section {
+            padding: 100px 5%;
+            background: var(--white-secondary);
+        }
+
+        .reviews-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .reviews-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+
+        .review-card {
+            background: var(--white-primary);
+            border: 1px solid var(--border-light);
+            border-radius: 15px;
+            padding: 40px;
+            position: relative;
+            transition: var(--transition-smooth);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+
+        .review-card:hover {
+            border-color: var(--gold-primary);
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(212, 175, 55, 0.1);
+        }
+
+        .review-stars {
+            color: var(--gold-primary);
+            margin-bottom: 20px;
+            font-size: 1rem;
+        }
+
+        .review-text {
+            color: var(--text-gray);
+            font-size: 1.05rem;
+            line-height: 1.8;
+            margin-bottom: 20px;
+            font-style: italic;
+        }
+
+        .reviewer-name {
+            color: var(--gold-primary);
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .reviewer-event {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        .add-review-btn {
+            display: block;
+            margin: 0 auto;
+            padding: 15px 40px;
+            background: var(--gold-primary);
+            color: var(--white-primary);
+            border: none;
+            border-radius: 30px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            font-size: 1rem;
+        }
+
+        .add-review-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.3);
+        }
+
+        /* Review Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255,255,255,0.95);
+            z-index: 3000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--white-primary);
+            border: 2px solid var(--gold-primary);
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 500px;
+            width: 100%;
+            position: relative;
+            animation: modalSlide 0.3s ease-out;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+        }
+
+        @keyframes modalSlide {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 1.5rem;
+            color: var(--gold-primary);
+            cursor: pointer;
+        }
+
+        .modal h3 {
+            color: var(--gold-primary);
+            margin-bottom: 30px;
+            text-align: center;
+            font-size: 1.8rem;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            color: var(--text-gray);
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 15px;
+            background: var(--white-secondary);
+            border: 1px solid var(--border-light);
+            border-radius: 8px;
+            color: var(--text-dark);
+            font-family: 'Inter', sans-serif;
+            transition: var(--transition-smooth);
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--gold-primary);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: var(--gold-primary);
+            color: var(--white-primary);
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            font-size: 1rem;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(212, 175, 55, 0.3);
+        }
+
+        /* Contact Section */
+        .contact-section {
+            padding: 100px 5%;
+            background: var(--white-primary);
+        }
+
+        .contact-container {
+            width: 75%;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: row;
+            gap: 90px;
+            justify-content: center;
+        }
+
+        .contact-form-wrapper h3 {
+            color: var(--gold-primary);
+            font-size: 1.8rem;
+            margin-bottom: 30px;
+        }
+
+        .booking-form,
+        .contact-form {
+            background: var(--white-secondary);
+            padding: 40px;
+            border-radius: 15px;
+            border: 1px solid var(--border-light);
+        }
+
+        .status-panel {
+            background: var(--white-secondary);
+            padding: 30px;
+            border-radius: 15px;
+            border: 1px solid var(--border-light);
+            margin-top: 30px;
+        }
+
+        .status-panel h4 {
+            color: var(--gold-primary);
+            font-size: 1.5rem;
+            margin-bottom: 18px;
+        }
+
+        .status-result {
+            margin-top: 18px;
+        }
+
+        .status-card {
+            background: #ffffff;
+            border: 1px solid var(--border-light);
+            border-radius: 14px;
+            padding: 20px;
+            margin-bottom: 18px;
+        }
+
+        .status-card p {
+            margin: 0 0 10px;
+            line-height: 1.5;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 6px 12px;
+            border-radius: 999px;
+            font-size: 0.85rem;
+            font-weight: 700;
+        }
+
+        .status-badge.approved { background: rgba(34,197,94,0.14); color: var(--green); }
+        .status-badge.pending { background: rgba(249,115,22,0.14); color: var(--orange); }
+        .status-badge.rejected { background: rgba(239,68,68,0.14); color: var(--red); }
+
+        .social-links {
+            display: flex;
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .social-links a {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--white-secondary);
+            border: 2px solid var(--gold-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gold-primary);
+            font-size: 1.2rem;
+            transition: var(--transition-smooth);
+            text-decoration: none;
+        }
+
+        .social-links a:hover {
+            background: var(--gold-primary);
+            color: var(--white-primary);
+            transform: translateY(-5px);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--white-secondary);
+            padding: 40px 5%;
+            text-align: center;
+            border-top: 1px solid var(--border-light);
+        }
+
+        .footer-logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            color: var(--gold-primary);
+            margin-bottom: 20px;
+        }
+
+        .footer-text {
+            color: var(--text-gray);
+            font-size: 0.9rem;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease-out;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background: rgba(255, 255, 255, 0.98);
+                flex-direction: column;
+                padding: 20px;
+                gap: 20px;
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+
+            .mobile-menu {
+                display: block;
+            }
+
+            .founder-container {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .founder-image {
+                margin: 0 auto;
+            }
+
+            .founder-message {
+                padding-left: 0;
+                border-left: none;
+                text-align: center;
+            }
+
+            .contact-container {
+                grid-template-columns: 1fr;
+            }
+
+            .events-grid,
+            .gallery-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .logo-placeholder {
+                width: 150px;
+                height: 150px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .locations-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stat-number {
+                font-size: 2rem;
+            }
+        }
+    </style>
+    <!-- DYNAMIC_PRICES -->
+</head>
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="#home" class="logo">
+                <i class="fas fa-crown"></i>
+                JAB <span>EVENTS</span>
+            </a>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#founder">Founder</a></li>
+                <li><a href="#events">Events</a></li>
+                <li><a href="#gallery">Gallery</a></li>
+                <li><a href="#reviews">Reviews</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+            <div class="mobile-menu" id="mobileMenu">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Locations Section - Now Home Page -->
+    <section class="locations-section" id="home">
+        <div class="section-header fade-in">
+            <h2>Our Locations</h2>
+            <p>Serving premium events across South India's most vibrant cities</p>
+        </div>
+        <div class="locations-grid">
+            <div class="location-card">
+                <img src="https://images.unsplash.com/photo-1595658658481-d53d3f999875?w=800&q=80" alt="Bangalore">
+                <div class="location-overlay">
+                    <h3 class="location-name" style="color: #e8e4e4;">Bangalore</h3>
+                    <p class="location-desc" style="color: #e8e4e4;">The Silicon Valley of India, hosting tech conferences and corporate galas</p>
+                </div>
+            </div>
+            <div class="location-card">
+                <img src="https://www.holidify.com/images/cmsuploads/compressed/1200px-PERUR_PATTEESHWARAR_TEMPLE_20181017194424_20181017194443.jpg" alt="Coimbatore">
+                <div class="location-overlay">
+                    <h3 class="location-name" style="color: #e8e4e4;">Coimbatore</h3>
+                    <p class="location-desc" style="color: #e8e4e4;">Manchester of South India, perfect for industrial meets and weddings</p>
+                </div>
+            </div>
+            <div class="location-card fade-in">
+                <img src="https://th.bing.com/th/id/OIP.CdsH5MCvgzQ0w0yf_fIFqQHaEK?o=7rm=3&rs=1&pid=ImgDetMain&o=7&rm=3" alt="Kerala">
+                <div class="location-overlay">
+                    <h3 class="location-name" style="color: #e8e4e4;">Kerala</h3>
+                    <p class="location-desc" style="color: #e8e4e4;">God's Own Country, ideal for destination weddings and retreats</p>
+                </div>
+            </div>
+            <div class="location-card fade-in">
+                <img src="https://tse2.mm.bing.net/th/id/OIP.T4ztLQtL8yk7aGj537nXdwHaEK?rs=1&pid=ImgDetMain&o=7&rm=3" alt="Nilgiris">
+                <div class="location-overlay">
+                    <h3 class="location-name" style="color: #e8e4e4;">Nilgiris</h3>
+                    <p class="location-desc" style="color: #e8e4e4;">Blue Mountain elegance for exclusive mountain-top celebrations</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Brand Intro Section with Video Background -->
+    <section class="brand-intro" id="brand">
+        <video class="brand-video-bg" autoplay muted loop playsinline>
+            <source src="https://assets.mixkit.co/videos/preview/mixkit-pouring-champagne-into-a-glass-at-a-party-4987-large.mp4" type="video/mp4">
+        </video>
+        <div class="brand-overlay"></div>
+        <div class="brand-content fade-in">
+            <!-- Logo Placeholder - Add your logo here -->
+            <div class="logo-placeholder">
+            <img src="bg.png" alt="Jab Events Logo">
+            </div>
+            <p class="brand-tagline" style="font-style: normal;">Where Dreams Meet Perfection</p>
+            <p class="brand-description" style="font-size: x-large; font-family: 'Times New Roman', Times, serif;">
+                At Jab Events, we transform your vision into extraordinary reality. With over a decade of experience in curating premium events, we specialize in creating bespoke experiences that leave lasting impressions. From intimate gatherings to grand celebrations, our meticulous attention to detail and creative excellence ensure every moment is magical.
+            </p>
+            <a href="#events" class="btn-primary">Explore Our Events</a>
+        </div>
+    </section>
+<!-- Offers Banner -->
+<div class="offers-container">
+    <!-- DYNAMIC_OFFERS -->
+</div>
+
+    <!-- About Section -->
+    <section class="about-section" id="about">
+        <div class="section-header fade-in">
+            <h2>About Us</h2>
+        </div>
+        <div class="about-content">
+            <p class="about-text fade-in" style="font-size: x-large; font-family: 'Times New Roman', Times, serif;">
+                The Jab events website is designed to showcase a complete range of event planning and management services, offering visitors a clear and engaging view of what we create and deliver. From weddings and private celebrations to corporate events and social gatherings, the platform highlights our work, services, and approach in a structured and visually appealing way. It serves as a space where ideas, creativity, and execution come together to reflect the quality and uniqueness of every event.<br>
+
+                 Built with a focus on user experience, the website allows clients to easily explore services, view past work, and connect for inquiries or bookings. Every section is crafted to provide clarity, inspiration, and convenience, ensuring visitors can quickly understand the process and possibilities. The goal of this website is not just to inform, but to inspire confidence and help clients take the first step toward creating memorable and meaningful events.
+            </p>
+            <div class="stats-container fade-in">
+                <div class="stat-item">
+                    <span class="stat-number" data-target="6">0</span>
+                    <span class="stat-label">Years Experience</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" data-target="100">0</span>
+                    <span class="stat-label">Events Completed</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" data-target="200">0</span>
+                    <span class="stat-label">Happy Clients</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" data-target="50">0</span>
+                    <span class="stat-label">team members</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Founder's Desk Section -->
+    <section class="founder-section" id="founder">
+        <div class="section-header fade-in">
+            <h2>Founder's Desk</h2>
+        </div>
+        <div class="founder-container fade-in">
+            <div class="founder-image">
+                <img src="jab_image.PNG" alt="Founder">
+            </div>
+            <div class="founder-content">
+                <h3>JABEZ PAUL</h3>
+                <p class="founder-title">Founder & Creative Director</p>
+                <p class="founder-message" style="font-family: 'Times New Roman', Times, serif;">
+                   <b>"Jabez Paul.P is an experienced event strategist and execution specialist with over six years of hands-on expertise in transforming ideas into memorable experiences. He has successfully managed a wide range of events, including high-energy parties, elegant weddings, corporate functions, and private celebrations. With a strong focus on creativity, precision, and strategic planning, he ensures that every event reflects a unique identity rather than following a standard template. By working closely with clients, he understands their vision and brings it to life through careful planning, vendor coordination, and seamless execution.<br><br>
+                    Known for his calm approach, sharp decision-making, and attention to detail, Jabez excels at anticipating challenges and handling them efficiently to ensure smooth event flow. His hands-on involvement and commitment to quality have earned him the trust of clients who value both professionalism and a personalized touch. For Jabez Paul.P, event management is more than just organizing—it is about creating meaningful, engaging, and unforgettable experiences that leave a lasting impression."</b>
+                </p>
+                <p class="founder-signature">- JABEZ PAUL</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Events Section -->
+    <section class="events-section" id="events">
+        <div class="section-header fade-in">
+            <h2>Our Events</h2>
+            <p>A showcase of our finest creations across diverse celebrations</p>
+        </div>
+        <div class="events-grid">
+            <div class="event-card fade-in">
+                <div class="event-media">
+                    <img src="https://images.unsplash.com/photo-1519741497674-611481863552?w=800&q=80" alt="Royal Wedding">
+                </div>
+                <div class="event-info">
+                    <h3 class="event-name">Wedding</h3>
+                    <p class="event-desc">A three-day luxury wedding celebration at a heritage palace in Kerala, featuring traditional ceremonies and modern elegance.</p>
+                </div>
+            </div>
+            <div class="event-card fade-in">
+                <div class="event-media">
+                    <img src="https://images.unsplash.com/photo-1540575467063-178a50c2df87" alt="Tech Event">
+                   
+                </div>
+                <div class="event-info">
+                    <h3 class="event-name">Corporate Events</h3>
+                    <p class="event-desc">Corporate events are professional gatherings like meetings, conferences, and launches for business purposes.</p>
+                </div>
+            </div>
+            <div class="event-card fade-in">
+                <div class="event-media">
+                    <img src="https://5.imimg.com/data5/II/RE/RL/SELLER-24406650/birthday-party-event-management-service-500x500.jpg" alt="Birthday Gala">
+                    
+                </div>
+                <div class="event-info">
+                    <h3 class="event-name">Birthday Party</h3>
+                    <p class="event-desc">An elegant birthday celebration featuring live jazz, gourmet dining, and personalized entertainment.</p>
+                </div>
+            </div>
+            <div class="event-card fade-in">
+                <div class="event-media">
+                    <img src="https://floodlightz.com/wp-content/uploads/slider/cache/fea9cf529fbbe4b3da0fba45807ccf9e/DJ-Sound-Light-and-Event.png" alt="Product Launch">
+                   
+                </div>
+                <div class="event-info">
+                    <h3 class="eventevent-name">DJ</h3>
+                    <p class="event-desc">DJ events feature live music mixing and entertainment for parties, weddings, and celebrations.</p>
+                </div>
+            </div>
+            <div class="event-card fade-in">
+                <div class="event-media">
+                    <img src="https://tse2.mm.bing.net/th/id/OIP.L7Rg0431F1BauFVHRrwhKgHaGa?rs=1&pid=ImgDetMain&o=7&rm=3" alt="Tech Event">
+                </div>
+                <div class="event-info">
+                    <h3 class="event-name">Celebrity Management</h3>
+                    <p class="event-desc">Celebrity management involves organizing, coordinating, and handling appearances of public figures for events and promotions.</p>
+                </div>
+            </div>
+            <div class="event-card fade-in">
+                <div class="event-media">
+                    <img src="https://th.bing.com/th/id/OIP.ICWtsqHqmlkQKEXIyVS_JQAAAA?w=229&h=164&c=7&r=0&o=7&dpr=1.5&pid=1.7&rm=3" alt="Music Festival">
+                
+                </div>
+                <div class="event-info">
+                    <h3 class="event-name">Concert nights</h3>
+                    <p class="event-desc">Concert nights are live music events featuring performances by artists for entertainment and audience engagement.</p>
+                </div>
+            </div>
+            <div class="event-card fade-in">
+                <div class="event-media">
+                    <img src="https://tse1.mm.bing.net/th/id/OIP.iM8liOkmyCewnviWG7xiQQHaE5?rs=1&pid=ImgDetMain&o=7&rm=3" alt="Charity Gala">
+                    
+                </div>
+                <div class="event-info">
+                    <h3 class="event-name">Private Parties</h3>
+                    <p class="event-desc">Customized celebrations organized for personal occasions with tailored themes and entertainment.</p>
+                </div>
+            </div>
+            <div class="event-card fade-in">
+                <div class="event-media">
+                    <img src="https://tse2.mm.bing.net/th/id/OIP.eEsEhqrPMuBh_YeGUrsNjQHaEO?rs=1&pid=ImgDetMain&o=7&rm=3" alt="Tech Event">
+                    
+                </div>
+                <div class="event-info">
+                    <h3 class="event-name">School Party</h3>
+                    <p class="event-desc">Well-planned academic and cultural programs conducted for students and institutions.</p>
+                </div>
+            </div>
+            <div class="event-card fade-in">
+                <div class="event-media">
+                    <img src="https://tse4.mm.bing.net/th/id/OIP.T9jn8G1Rjug45rcjPSVHIQHaFj?rs=1&pid=ImgDetMain&o=7&rm=3" alt="Mountain Retreat">
+                    
+                </div>
+                <div class="event-info">
+                    <h3 class="event-name">sound,light,stage</h3>
+                    <p class="event-desc">Professional setup of lighting, audio, and stage design for seamless event experiences.</p>
+                </div>
+            </div>
+            <div class="event-card fade-in">
+                <div class="event-media">
+                    <img src="https://tse4.mm.bing.net/th/id/OIP.D4iR9lYY-ozWWtC9K8L0jwHaE7?w=626&h=417&rs=1&pid=ImgDetMain&o=7&rm=3" alt="Engagement">
+                   
+                </div>
+                <div class="event-info">
+                    <h3 class="event-name">Sports Events</h3>
+                    <p class="event-desc">Organized competitions and tournaments with full event management and coordination.</p>
+                </div>
+            </div>
+            <div class="event-card fade-in">
+                <div class="event-media">
+                    <img src="https://tse3.mm.bing.net/th/id/OIP.3zfiGiHDKrUlpVpJAN8a-QHaEN?rs=1&pid=ImgDetMain&o=7&rm=3" alt="Fashion Show">
+                    
+                </div>
+                <div class="event-info">
+                    <h3 class="event-name">stalls & Exhibitions</h3>
+                    <p class="event-desc">Setup and management of display stalls and exhibition spaces for brands and showcases.</p>
+                </div>
+            </div>
+            <div class="event-card fade-in">
+                <div class="event-media">
+                    <img src="https://tse2.mm.bing.net/th/id/OIP.Z5_xkGbRz8gkpDUN7TrkiQHaGz?rs=1&pid=ImgDetMain&o=7&rm=3" alt="Tech Event">
+                    
+                </div>
+                <div class="event-info">
+                    <h3 class="event-name">Catering Service</h3>
+                    <p class="event-desc">Professional food and beverage services tailored to suit any event or gathering.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gallery Section -->
+    <section class="gallery-section" id="gallery">
+        <div class="section-header fade-in">
+            <h2>Event Gallery</h2>
+            <p>Visual stories from our most memorable celebrations</p>
+        </div>
+        <div class="gallery-grid">
+            <div class="gallery-item fade-in" onclick="openLightbox(this)">
+                <img src="https://images.unsplash.com/photo-1519225421980-715cb0215aed?w=800&q=80" alt="Wedding Decor">
+                <div class="gallery-overlay">
+                    <i class="fas fa-expand"></i>
+                </div>
+            </div>
+            <div class="gallery-item fade-in" onclick="openLightbox(this)">
+                <img src="https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?w=800&q=80" alt="Table Setting">
+                <div class="gallery-overlay">
+                    <i class="fas fa-expand"></i>
+                </div>
+            </div>
+            <div class="gallery-item fade-in" onclick="openLightbox(this)">
+                <img src="https://images.unsplash.com/photo-1527529482837-4698179dc6ce?w=800&q=80" alt="Stage Design">
+                <div class="gallery-overlay">
+                    <i class="fas fa-expand"></i>
+                </div>
+            </div>
+            <div class="gallery-item fade-in" onclick="openLightbox(this)">
+                <img src="https://images.unsplash.com/photo-1530023367847-a683933f4172?w=800&q=80" alt="Floral Arrangement">
+                <div class="gallery-overlay">
+                    <i class="fas fa-expand"></i>
+                </div>
+            </div>
+            <div class="gallery-item fade-in" onclick="openLightbox(this)">
+                <img src="https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=800&q=80" alt="DJ Setup">
+                <div class="gallery-overlay">
+                    <i class="fas fa-expand"></i>
+                </div>
+            </div>
+            <div class="gallery-item fade-in" onclick="openLightbox(this)">
+                <img src="https://i.pinimg.com/originals/04/a9/64/04a96437e83adee669ad27407a2f76a6.jpg" alt="Lighting Design">
+                <div class="gallery-overlay">
+                    <i class="fas fa-expand"></i>
+                </div>
+            </div>
+            <div class="gallery-item fade-in" onclick="openLightbox(this)">
+                <img src="https://cdn2.allevents.in/transup/e3/880c2c3e74476a9021094ef88f8b08/concert.png" alt="Outdoor Setup">
+                <div class="gallery-overlay">
+                    <i class="fas fa-expand"></i>
+                </div>
+            </div>
+            <div class="gallery-item fade-in" onclick="openLightbox(this)">
+                <img src="https://images.unsplash.com/photo-1522673607200-164d1b6ce486?w=800&q=80" alt="Catering Display">
+                <div class="gallery-overlay">
+                    <i class="fas fa-expand"></i>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Lightbox -->
+    <div class="lightbox" id="lightbox" onclick="closeLightbox()">
+        <span class="lightbox-close"><i class="fas fa-times"></i></span>
+        <img src="" alt="Gallery Image" class="lightbox-img" id="lightboxImg">
+    </div>
+
+    <!-- Reviews Section -->
+<section class="reviews-section" id="reviews">
+    <div class="section-header fade-in">
+        <h2>Client Reviews</h2>
+        <p>Words from those who experienced our magic</p>
+    </div>
+    <div class="reviews-container">
+        <div class="reviews-grid">
+            <!-- DYNAMIC_REVIEWS -->
+        </div>
+        <button class="add-review-btn" onclick="openReviewModal()">
+            <i class="fas fa-pen"></i> Add Your Review
+        </button>
+    </div>
+</section>
+    <!-- Review Modal -->
+    <div class="modal" id="reviewModal">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeReviewModal()"><i class="fas fa-times"></i></span>
+            <h3>Share Your Experience</h3>
+            <form id="reviewForm">
+                <div class="form-group">
+                    <label>Your Name</label>
+                    <input type="text" id="reviewerName" required placeholder="Enter your name">
+                </div>
+                <div class="form-group">
+                    <label>Event Type</label>
+                    <input type="text" id="reviewerEvent" required placeholder="e.g., Wedding, Corporate Event">
+                </div>
+                <div class="form-group">
+                    <label>Your Review</label>
+                    <textarea id="reviewText" required placeholder="Tell us about your experience..."></textarea>
+                </div>
+                <button type="submit" class="submit-btn">Submit Review</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Contact Section -->
+    <section class="contact-section" id="contact">
+        <div class="section-header fade-in">
+            <h2>Contact & Booking</h2>
+            <p>Let's start planning your perfect event</p>
+        </div>
+        <div class="contact-container">
+            <div class="contact-form-wrapper fade-in">
+                <h3>Get in Touch</h3>
+                <form class="contact-form" id="inquiryForm" action="https://formspree.io/f/xeerdqgr" method="POST">
+                    <div class="form-group">
+                        <label>Your Name</label>
+                        <input type="text" name="name" required placeholder="Full Name">
+                    </div>
+                    <div class="form-group">
+                        <label>Email Address</label>
+                        <input type="email" name="email" required placeholder="email@example.com">
+                    </div>
+                    <div class="form-group">
+                        <label>Mobile Number</label>
+                        <input type="tel" name="mobile" required placeholder="e.g. 9876543210">
+                    </div>
+                    <div class="form-group">
+                        <label>Event Needed</label>
+                        <input type="text" name="event_name" required placeholder="e.g. Wedding, Corporate Event">
+                    </div>
+                    <div class="form-group">
+                        <label>Message</label>
+                        <textarea name="message" required placeholder="Tell us more about your plan..." rows="4"></textarea>
+                    </div>
+                    <button type="submit" class="submit-btn">Submit Inquiry</button>
+                    <div id="inquiryResult" class="status-result" style="margin-top:16px"></div>
+                </form>
+
+                <div class="social-links">
+                    <a href="https://instagram.com/jabevents.co" target="_blank" title="Instagram">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a href="https://facebook.com/jabevents" target="_blank" title="Facebook">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a href="https://wa.me/9123537098" target="_blank" title="WhatsApp">
+                        <i class="fab fa-whatsapp"></i>
+                    </a>
+                    <a href="mailto:smilinenancys@gmail.com" title="Email">
+                        <i class="fas fa-envelope"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-logo">JAB EVENTS</div>
+        <p class="footer-text">© 2026 Jab Events. All rights reserved. | Crafting Memories Across South India</p>
+    </footer>
+
+    <script>
+        // Navbar scroll effect
+        window.addEventListener('scroll', function() {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // Mobile menu toggle
+        const mobileMenu = document.getElementById('mobileMenu');
+        const navLinks = document.getElementById('navLinks');
+        
+        mobileMenu.addEventListener('click', function() {
+            navLinks.classList.toggle('active');
+        });
+
+        // Close mobile menu when clicking a link
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+            });
+        });
+
+        // Intersection Observer for fade-in animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: "0px 0px -50px 0px"
+        };
+
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    
+                    // Animate stats numbers
+                    if (entry.target.classList.contains('stats-container')) {
+                        animateStats();
+                    }
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-in').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Stats counter animation
+        function animateStats() {
+            const stats = document.querySelectorAll('.stat-number');
+            stats.forEach(stat => {
+                const target = parseInt(stat.getAttribute('data-target'));
+                const duration = 2000;
+                const increment = target / (duration / 16);
+                let current = 0;
+                
+                const updateCount = () => {
+                    current += increment;
+                    if (current < target) {
+                        stat.textContent = Math.floor(current);
+                        requestAnimationFrame(updateCount);
+                    } else {
+                        stat.textContent = target + '+';
+                    }
+                };
+                
+                updateCount();
+            });
+        }
+
+        // Lightbox functionality
+        function openLightbox(element) {
+            const img = element.querySelector('img');
+            const lightbox = document.getElementById('lightbox');
+            const lightboxImg = document.getElementById('lightboxImg');
+            
+            lightboxImg.src = img.src;
+            lightbox.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeLightbox() {
+            const lightbox = document.getElementById('lightbox');
+            lightbox.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Close lightbox with Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeLightbox();
+                closeReviewModal();
+            }
+        });
+
+        // Review Modal
+        function openReviewModal() {
+            document.getElementById('reviewModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeReviewModal() {
+            document.getElementById('reviewModal').classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        function escHtml(text) {
+            return String(text || '')
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
+        async function loadPublicReviews() {
+            const container = document.querySelector('.reviews-section .reviews-grid');
+            if (!container) return;
+
+            try {
+                const res = await fetch('/api/reviews');
+                const reviews = await res.json();
+
+                if (!Array.isArray(reviews) || reviews.length === 0) {
+                    container.innerHTML = '<div class="review-card">No reviews yet. Be the first to review!</div>';
+                    return;
+                }
+
+                container.innerHTML = reviews.map(review => `
+                    <div class="review-card fade-in visible">
+                        <div class="review-stars">
+                            ${'<i class="fas fa-star"></i>'.repeat(review.rating)}
+                        </div>
+                        <p class="review-text">"${escHtml(review.review_text)}"</p>
+                        <p class="reviewer-name">${escHtml(review.name)}</p>
+                        <p class="reviewer-event">${escHtml(review.event_type)}</p>
+                    </div>
+                `).join('');
+            } catch (e) {
+                console.error('Failed to load public reviews:', e);
+            }
+        }
+
+        // Submit Review — saves to database via API
+        async function submitReview(event) {
+            event.preventDefault();
+            const name      = document.getElementById('reviewerName').value.trim();
+            const eventType = document.getElementById('reviewerEvent').value.trim();
+            const text      = document.getElementById('reviewText').value.trim();
+            const btn       = document.querySelector('#reviewForm .submit-btn');
+
+            if (!name || !eventType || !text) {
+                alert('Please fill in all fields.');
+                return;
+            }
+
+            btn.textContent = 'Submitting...';
+            btn.disabled = true;
+
+            try {
+                const res = await fetch('/api/reviews', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, event_type: eventType, review_text: text, rating: 5 })
+                });
+                const result = await res.json();
+                if (result.success) {
+                    alert('✅ Thank you for your review! It has been saved.');
+                    document.getElementById('reviewForm').reset();
+                    closeReviewModal();
+                    await loadPublicReviews();
+                } else {
+                    alert('❌ Error: ' + (result.error || 'Could not save review'));
+                }
+            } catch(e) {
+                alert('❌ Network error. Please try again.');
+            } finally {
+                btn.textContent = 'Submit Review';
+                btn.disabled = false;
+            }
+        }
+        
+
+        // Submit Booking — saves to database via API
+        document.addEventListener('DOMContentLoaded', async function() {
+            const bookingForm = document.querySelector('.booking-form');
+            if (bookingForm) {
+                bookingForm.addEventListener('submit', async function(e) {
+                    e.preventDefault();
+                    const btn  = bookingForm.querySelector('.submit-btn');
+                    const data = {
+                        name:       bookingForm.querySelector('[name="name"]').value.trim(),
+                        phone:      bookingForm.querySelector('[name="phone"]').value.trim(),
+                        event_type: bookingForm.querySelector('[name="event_type"]').value,
+                        event_date: bookingForm.querySelector('[name="event_date"]').value
+                    };
+
+                    if (!data.name || !data.phone || !data.event_type || !data.event_date) {
+                        alert('Please fill in all fields.');
+                        return;
+                    }
+
+                    btn.textContent = 'Submitting...';
+                    btn.disabled = true;
+
+                    try {
+                        const res = await fetch('/api/bookings', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(data)
+                        });
+                        const result = await res.json();
+                        if (result.success) {
+                            alert('✅ ' + result.message);
+                            bookingForm.reset();
+                        } else {
+                            alert('❌ ' + (result.error || 'Booking failed. Try again.'));
+                        }
+                    } catch(err) {
+                        alert('❌ Network error. Please try again.');
+                    } finally {
+                        btn.textContent = 'Request Booking';
+                        btn.disabled = false;
+                    }
+                });
+            }
+
+            const reviewFormStatic = document.getElementById('reviewForm');
+            if (reviewFormStatic) {
+                reviewFormStatic.addEventListener('submit', submitReview);
+            }
+
+            const inquiryForm = document.getElementById('inquiryForm');
+            const inquiryResult = document.getElementById('inquiryResult');
+            if (inquiryForm) {
+                inquiryForm.addEventListener('submit', async function(e) {
+                    e.preventDefault();
+                    const btn = inquiryForm.querySelector('.submit-btn');
+                    const name = inquiryForm.querySelector('[name="name"]').value.trim();
+                    const email = inquiryForm.querySelector('[name="email"]').value.trim();
+                    const mobile = inquiryForm.querySelector('[name="mobile"]').value.trim();
+                    const event_name = inquiryForm.querySelector('[name="event_name"]').value.trim();
+                    const message = inquiryForm.querySelector('[name="message"]').value.trim();
+
+                    if (!name || !email || !mobile || !event_name || !message) {
+                        inquiryResult.textContent = 'Please fill in all fields.';
+                        inquiryResult.style.color = '#c0392b';
+                        return;
+                    }
+
+                    btn.textContent = 'Submitting...';
+                    btn.disabled = true;
+                    inquiryResult.textContent = '';
+
+                    try {
+                        // Save in local DB
+                        const dbPromise = fetch('/api/inquiries', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ name, email, mobile, event_name, message })
+                        });
+
+                        // Send to Formspree (contact provider)
+                        const formspreePromise = fetch(inquiryForm.action, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ name, email, mobile, event_name, message })
+                        });
+
+                        const [dbRes, fsRes] = await Promise.allSettled([dbPromise, formspreePromise]);
+
+                        let doneCount = 0;
+                        let errorMsgs = [];
+
+                        if (dbRes.status === 'fulfilled') {
+                            const data = await dbRes.value.json();
+                            if (dbRes.value.ok && data.success) {
+                                doneCount += 1;
+                            } else {
+                                errorMsgs.push('DB save failed: ' + (data.error || dbRes.value.statusText));
+                            }
+                        } else {
+                            errorMsgs.push('DB request failed: ' + dbRes.reason);
+                        }
+
+                        if (fsRes.status === 'fulfilled') {
+                            if (fsRes.value.ok) {
+                                doneCount += 1;
+                            } else {
+                                const text = await fsRes.value.text();
+                                errorMsgs.push('Formspree failed: ' + fsRes.value.status + ' ' + text);
+                            }
+                        } else {
+                            errorMsgs.push('Formspree request failed: ' + fsRes.reason);
+                        }
+
+                        if (doneCount === 2) {
+                            inquiryResult.textContent = '✅ Inquiry submitted via Formspree and saved to DB successfully.';
+                            inquiryResult.style.color = '#16a34a';
+                            inquiryForm.reset();
+                        } else if (doneCount === 1) {
+                            inquiryResult.textContent = '⚠️ Partial success: ' + errorMsgs.join(' | ');
+                            inquiryResult.style.color = '#d97706';
+                            if (dbRes.status === 'fulfilled' && dbRes.value.ok) inquiryForm.reset();
+                        } else {
+                            inquiryResult.textContent = '❌ Submission failed: ' + errorMsgs.join(' | ');
+                            inquiryResult.style.color = '#c0392b';
+                        }
+                    } catch (err) {
+                        inquiryResult.textContent = '❌ Unexpected error: ' + err.message;
+                        inquiryResult.style.color = '#c0392b';
+                    } finally {
+                        btn.textContent = 'Submit Inquiry';
+                        btn.disabled = false;
+                    }
+                });
+            }
+
+            await loadPublicReviews();
+        });
+
+        // Smooth scroll for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
